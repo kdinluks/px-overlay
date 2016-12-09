@@ -68,17 +68,6 @@ Navigate to the root of that server (e.g. http://localhost:8080/) in a browser t
 
 By default gulp serve is configured to enable LiveReload and will be watching for modifications in your root directory as well as `/css`.
 
-
-
-
-### concurrent
-concurrent runs `grunt depserve` and `grunt watch` concurrently so that when you make a change to your source files and save them, your preview will be updated in any browsers you have opened and turned on LiveReload.
-From the component's directory run:
-
-```
-$ grunt concurrent
-```
-
 ### GE Coding Style Guide
 [GE JS Developer's Guide](https://github.com/GeneralElectric/javascript)
 
