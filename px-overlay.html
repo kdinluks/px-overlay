@@ -26,9 +26,8 @@ The following custom properties are available for styling:
 
 Custom property | Description | Default
 ----------------|-------------|----------
-`--px-overlay-base-color` | Base background color for the overlay | `$black`
-`--px-overlay-light-alpha` | Alpha value for the light version | `0.15`
-`--px-overlay-dark-alpha` | Alpha value for the dark version | `0.65`
+`--px-overlay-light-color` | Color value for the "light" overlay | `rgba($black, 0.15)`
+`--px-overlay-dark-color` | Color value for the "dark" overlay | `rgba($black, 0.65)`
 
 @element px-overlay
 @blurb Element providing an overlay for use with other components.
@@ -41,7 +40,7 @@ Custom property | Description | Default
 <dom-module id="px-overlay">
     <template>
       <style include="px-overlay-styles"></style>
-      
+
       <div id="overlay" class$="{{_getOverlayClass(type)}}"></div>
     </template>
 </dom-module>

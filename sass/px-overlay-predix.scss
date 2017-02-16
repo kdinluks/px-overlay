@@ -25,9 +25,9 @@ common/abstract rules go in px-overlay-sketch.scss, not in this file.
 @import 'px-overlay-sketch.scss';
 
 .light {
-  background-color: rgba(var(--px-overlay-base-color, $black),var(--px-overlay-light-alpha, 0.15));
+  background-color: var(--px-overlay-light-color, rgba($black, 0.15));
 }
 
 .dark {
-  background-color: rgba(var(--px-overlay-base-color, $black),var(--px-overlay-dark-alpha, 0.65));
+  background-color: var(--px-overlay-dark-color, rgba($black, 0.65));
 }
