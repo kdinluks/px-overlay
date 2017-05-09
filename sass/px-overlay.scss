@@ -36,6 +36,7 @@
 }
 
 #overlay {
+  background-color: var(--px-overlay-color);
   width:100vw;
   height:100vh;
   &.larger {
@@ -43,12 +44,4 @@
     height:110vh;
   }
   transition: all 0.3s linear;
-}
-
-.light {
-  background-color: var(--px-overlay-light-color, rgba(black, 0.15));
-}
-
-.dark {
-  background-color: var(--px-overlay-dark-color, rgba(black, 0.65));
 }
