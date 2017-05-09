@@ -9,7 +9,6 @@
  */
 
 // Settings
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
@@ -47,9 +46,9 @@
 }
 
 .light {
-  background-color: var(--px-overlay-light-color, rgba($black, 0.15));
+  background-color: var(--px-overlay-light-color, rgba(black, 0.15));
 }
 
 .dark {
-  background-color: var(--px-overlay-dark-color, rgba($black, 0.65));
+  background-color: var(--px-overlay-dark-color, rgba(black, 0.65));
 }
