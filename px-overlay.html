@@ -13,8 +13,8 @@ Element providing an overlay for use with other components.
 You can place the component anywhere on the page, since it has a fixed position, and takes up100vw x 100vh @ z-index position 1000.
 
 Default styles:
-Type dark = 65% black
-Type light = 15% black
+- Type dark = 65% black
+- Type light = 15% black
 
 
 ##### Usage
@@ -40,7 +40,6 @@ Custom property | Description | Default
 <dom-module id="px-overlay">
     <template>
       <style include="px-overlay-styles"></style>
-
       <div id="overlay" class$="{{_getOverlayClass(type)}}"></div>
     </template>
 </dom-module>

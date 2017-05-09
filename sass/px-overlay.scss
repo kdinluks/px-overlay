@@ -8,21 +8,43 @@
  * under which the software has been supplied.
  */
 
-//
-// Sass for the Predix notion of the px-overlay component
-//
-// @author
-//
-
-/*
-THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
-common/abstract rules go in px-overlay-sketch.scss, not in this file.
-*/
-
 // Settings
 @import "px-colors-design/_settings.colors.scss";
 
-@import 'px-overlay-sketch.scss';
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-viewport-design/_base.viewport.scss";
+
+:host {
+  display: block;
+  outline: none;
+  z-index: 1000;
+  position: fixed;
+  width:100vw;
+  height:100vh;
+  top:0;
+  left:0;
+}
+
+.larger {
+  width:110vw;
+  height:110vh;
+}
+
+#overlay {
+  width:100vw;
+  height:100vh;
+  &.larger {
+    width:110vw;
+    height:110vh;
+  }
+  transition: all 0.3s linear;
+}
 
 .light {
   background-color: var(--px-overlay-light-color, rgba($black, 0.15));
