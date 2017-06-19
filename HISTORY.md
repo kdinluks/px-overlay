@@ -3,6 +3,7 @@ v1.0.0
 * updated dependencies for design refresh
 * component redesign
 * remove light type per design feedback
+* add unit tests
 
 v0.4.4
 ==================

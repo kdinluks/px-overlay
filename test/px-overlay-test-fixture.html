@@ -19,12 +19,16 @@
     <script src="px-overlay-base-tests.js"></script>
     <!-- This script link will contain the generated script stub for custom, developer-added test cases -->
     <script src="px-overlay-custom-tests.js"></script>
+    <style is="custom-style">
+      #salmon {
+        --px-overlay-color: salmon;
+      }
+    </style>
   </head>
 
   <body>
     <h3>Web Component Test : Fixture for px-overlay</h3>
     <px-overlay></px-overlay>
-    <px-overlay id="dark" type="dark"></px-overlay>
-    <px-overlay id="light" type="light"></px-overlay>
+    <px-overlay id="salmon"></px-overlay>
   </body>
 </html>
