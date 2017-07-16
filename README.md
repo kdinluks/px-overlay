@@ -1,11 +1,8 @@
-px-overlay [![Build Status](https://travis-ci.org/PredixDev/px-overlay.svg?branch=master)](https://travis-ci.org/PredixDev/px-overlay)
------------------------------------------------
-
-[![px-overlay demo](px-overlay.png?raw=true)](https://predixdev.github.io/px-overlay)
+# px-overlay [![Build Status](https://travis-ci.org/PredixDev/px-overlay.svg?branch=master)](https://travis-ci.org/PredixDev/px-overlay)
 
 ## Overview
 
-px-overlay is a Predix UI component that defines a full viewport overlay element. It has two types, a light version and a dark version.
+Px-overlay is a Predix UI component that defines a full viewport overlay element. It has two types, a light version and a dark version.
 
 ## Usage
 
@@ -39,7 +36,8 @@ Finally, use the component in your application:
 
 <br />
 <hr />
-## documentation
+
+## Documentation
 
 Read the full API and view the demo [here](https://predixdev.github.io/px-overlay).
 <br />
