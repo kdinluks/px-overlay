@@ -2,7 +2,7 @@
 
 ## Overview
 
-`Px-overla`y is a Predix UI component which defines a full viewport overlay element. It has two types, a light version and a dark version.
+`Px-overlay` is a Predix UI component which defines a full viewport overlay element. It has two types, a light version and a dark version.
 
 ## Usage
 
