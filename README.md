@@ -2,7 +2,7 @@
 
 ## Overview
 
-Px-overlay is a Predix UI component that defines a full viewport overlay element. It has two types, a light version and a dark version.
+`Px-overla`y is a Predix UI component which defines a full viewport overlay element. It has two types, a light version and a dark version.
 
 ## Usage
 
@@ -12,17 +12,17 @@ Px-overlay is a Predix UI component that defines a full viewport overlay element
 3. bower
 4. [webcomponents-lite.js polyfill](https://github.com/webcomponents/webcomponentsjs)
 
-Node, npm and bower are necessary to install the component and dependencies. webcomponents.js adds support for web components and custom elements to your application.
+Node, npm, and bower are necessary to install the component and dependencies. webcomponents.js adds support for web components and custom elements to your application.
 
 ## Getting Started
 
-First, install the component via bower on the command line.
+First, install the component via bower on the command line:
 
 ```
 bower install px-overlay --save
 ```
 
-Second, import the component to your application with the following tag in your head.
+Second, import the component in your application with the following tag in your head:
 
 ```
 <link rel="import" href="/bower_components/px-overlay/px-overlay.html"/>
