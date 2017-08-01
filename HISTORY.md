@@ -1,3 +1,7 @@
+v1.0.1
+==================
+* fix demo 404
+
 v1.0.0
 ==================
 * updated dependencies for design refresh
