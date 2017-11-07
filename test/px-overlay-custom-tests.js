@@ -1,22 +1,60 @@
-// This is the wrapper for custom tests, called upon web components ready state
-function runCustomTests() {
-  // Place any setup steps like variable declaration and initialization here
+suite('Custom Automation Tests for px-overlay', function() {
+  let overlay;
+  let salmonOverlay;
 
-  // This is the placeholder suite to place custom tests in
-  // Use testCase(options) for a more convenient setup of the test cases
-  suite('Custom Automation Tests for px-overlay', function() {
-    var overlay = document.getElementById('overlay');
-    test('Overlay is correct background color', function() {
-      assert.equal(window.getComputedStyle(overlay).backgroundColor.substring(0,18), 'rgba(0, 0, 0, 0.65');
-    });
-    test('Overlay is correct size', function() {
-      assert.equal(parseInt(window.getComputedStyle(overlay).height), window.innerHeight);
-      assert.equal(parseInt(window.getComputedStyle(overlay).width), window.innerWidth);
-    });
-    test('Overlay accepts style variable', function() {
-      var overlay = document.getElementById('salmon'),
-      div = Polymer.dom(overlay.root).querySelector('#overlay');
-      assert.equal(window.getComputedStyle(div).backgroundColor, 'rgb(250, 128, 114)');
-    });
+  setup((done)=>{
+    overlay = fixture('px-overlay-fixture');
+    salmonOverlay = fixture('px-overlay-salmon-fixture');
+    flush(()=>{
+      done();
+    })
   });
-};
+
+  test('Overlay is correct background color', function(done) {
+    let overlayDiv = Polymer.dom(overlay.root).querySelector('div');
+    async.until(
+      function() {
+        return (window.getComputedStyle(overlayDiv).backgroundColor.substring(0,18) === 'rgba(0, 0, 0, 0.65');
+      },
+      function(callback) {
+        setTimeout(callback, 1000);
+      },
+      function (err, n) {
+        assert.equal(window.getComputedStyle(overlayDiv).backgroundColor.substring(0,18), 'rgba(0, 0, 0, 0.65');
+        done();
+      }
+    )
+  });
+
+  test('Overlay is correct size', function(done) {
+    async.until(
+      function() {
+        return (parseInt(window.getComputedStyle(overlay).height) === window.innerHeight);
+      },
+      function(callback) {
+        setTimeout(callback, 1000);
+      },
+      function (err, n) {
+        assert.equal(parseInt(window.getComputedStyle(overlay).height), window.innerHeight);
+        assert.equal(parseInt(window.getComputedStyle(overlay).width), window.innerWidth);
+        done();
+      }
+    )
+  });
+
+  test('Overlay accepts style variable', function(done) {
+    let div = Polymer.dom(salmonOverlay.root).querySelector('#overlay');
+    async.until(
+      function() {
+        return (window.getComputedStyle(div).backgroundColor === 'rgb(250, 128, 114)');
+      },
+      function(callback) {
+        setTimeout(callback, 1000);
+      },
+      function (err, n) {
+        assert.equal(window.getComputedStyle(div).backgroundColor, 'rgb(250, 128, 114)');
+        done();
+      }
+    )
+  });
+});
