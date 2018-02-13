@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer.html"/>
+
+<script>
+window.PxOverlayBehavior = window.PxOverlayBehavior || {};
+const PxOverlayBehavior = window.PxOverlayBehavior;
+
+/*
+    Name:
+    PxOverlayBehavior.sharedProperties
+
+    Description:
+    Polymer behavior that provides some general properties
+
+    Dependencies:
+    - D3.js
+
+    @polymerBehavior PxOverlayBehavior.sharedProperties
+*/
+PxOverlayBehavior.sharedProperties = {
+  properties: {
+    containerType: String
+  }
+};
+
+/*
+    Name:
+    PxOverlayBehavior.wrapper
+
+    Description:
+
+
+    Dependencies:
+    - D3.js
+
+    @polymerBehavior PxOverlayBehavior.wrapper
+*/
+PxOverlayBehavior.wrapper = [{
+
+  properties: {
+    opened: {
+      type: Boolean,
+      value: false,
+      observer: 'toggleOverlay'
+    },
+    _content: Array
+  },
+
+  ready: function() {
+    this._content = this.shadowRoot.querySelector('#overlayWrapper');
+
+  },
+
+  detached: function() {
+
+  },
+
+  toggleOverlay: function() {
+    if(this.opened) {
+      this.openOverlay();
+
+    } else {
+      this.closeOverlay();
+
+    }
+  },
+
+  openOverlay: function() {
+    const event = new CustomEvent('px-overlay-attachment-request', {
+      bubbles: true,
+      composed: true,
+      cancelable: true
+    });
+
+    this.dispatchEvent(event);
+
+    // If no handler responded, create one
+    if (!event.defaultPrevented) {
+      const elem = document.createElement('px-overlay-container');
+      document.body.appendChild(elem);
+
+      // dunno if we really need this, but seems like a good idea ¯\(º o)/¯
+      Polymer.RenderStatus.afterNextRender(this, () => {
+        this.dispatchEvent(event);
+      });
+    }
+  },
+
+  closeOverlay: function() {
+    this.dispatchEvent(new CustomEvent('px-overlay-detachment-request', { bubbles: true, composed: true }));
+  }
+}, PxOverlayBehavior.sharedProperties];
+</script>
+
+<link rel="import" href="px-overlay-container.html"/>
