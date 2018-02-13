@@ -132,6 +132,7 @@
 
         if(!hoist && this._container) {
           this._container.detachContent(this);
+          this._container = undefined;
           this._content.forEach(elem => {
             this.appendChild(elem);
           });
