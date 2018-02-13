@@ -32,35 +32,40 @@
           type: Array,
           value: function() { return []; }
         },
+
+        _isAttached: {
+          type: Boolean,
+          value: false
+        }
       },
 
-      ready: function() {
-        // TODO, what if we have dynamic content, like dom repeat?
-        this._content = Polymer.FlattenedNodesObserver.getFlattenedNodes(this);
-        this._id = this.generateRandomID('overlay_');
-
-      },
+      observers: [
+        '_hoistPropChanged(hoist)'
+      ],
 
       attached: function() {
-        // TODO is a requestIdleFeedback a good idea? Will modals ever start open?
+        // FIXME? is a requestIdleFeedback a good idea? Will modals ever start open?
 
         // dunno if we really need this, but seems like a good idea ¯\(º o)/¯
         Polymer.RenderStatus.afterNextRender(this, () => {
-          this.hoistOverlay();
+          this._id = this.generateRandomID('overlay_');
+          // TODO, what if we have dynamic content, like dom repeat? Need to test
+          this._content = Polymer.FlattenedNodesObserver.getFlattenedNodes(this);
+          this._isAttached = true;
+          this._hoistPropChanged(this.hoist);
         });
 
       },
 
       detached: function() {
+        this._isAttached = false;
+
         if(this._container) {
           this._container.detachContent(this);
         }
 
-        if(this._uniqueIdsUsed) {
-          for(var i=0; i<this._uniqueIdsUsed.length; i++) {
-            window.Px.uniqueIds['overlay_'].splice(window.Px.uniqueIds['overlay_'].indexOf(this._uniqueIdsUsed[i]), 1);
-          }
-          this._uniqueIdsUsed = [];
+        if(this._id) {
+          window.Px.uniqueIds['overlay_'].splice(window.Px.uniqueIds['overlay_'].indexOf(this._id), 1);
         }
 
       },
@@ -74,7 +79,7 @@
 
         this.dispatchEvent(event);
 
-        // If no handler responded, create one
+        // If no container responded, create one
         if (!event.defaultPrevented) {
           const elem = document.createElement('px-overlay-container');
           document.body.appendChild(elem);
@@ -86,40 +91,52 @@
         }
       },
 
-      closeOverlay: function() {
-        this.dispatchEvent(new CustomEvent('px-overlay-detachment-request', { bubbles: true, composed: true }));
+      /**
+      * Generates a random id string.
+      *
+      * Takes a string prefix, then adds 10 random chars
+      *
+      * @param {string}
+      * @return {id string}
+      */
+      generateRandomID: function(baseStr) {
+        var id = baseStr || 'id_',
+            abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+            len = abc.length;
+
+        for(var i = 0; i < 10; i++){
+          id += abc.charAt(Math.floor(Math.random() * len));
+        }
+
+        window.Px = window.Px || {};
+        window.Px.uniqueIds = window.Px.uniqueIds || {};
+        window.Px.uniqueIds[baseStr] = window.Px.uniqueIds[baseStr] || [];
+
+        if(window.Px.uniqueIds[baseStr].indexOf(id) !== -1) {
+          //id exists, recreate it.
+          return this.generateRandomID(baseStr);
+        } else {
+          window.Px.uniqueIds[baseStr].push(id);
+        }
+
+        return id;
       },
 
-      /**
-        * Generates a random id string.
-        *
-        * Takes a string prefix, then adds 10 random chars
-        *
-        * @param {string}
-        * @return {id string}
-        */
-        generateRandomID: function(baseStr) {
-          var id = baseStr || 'id_',
-              abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-              len = abc.length;
+      _hoistPropChanged: function(hoist) {
+        if(!this._isAttached) {
+          return;
+        }
+        if(hoist && !this._container) {
+          this.hoistOverlay();
+        }
 
-          for(var i = 0; i < 10; i++){
-            id += abc.charAt(Math.floor(Math.random() * len));
-          }
+        if(!hoist && this._container) {
+          this._container.detachContent(this);
+          this._content.forEach(elem => {
+            this.appendChild(elem);
+          });
+        }
 
-          window.Px = window.Px || {};
-          window.Px.uniqueIds = window.Px.uniqueIds || {};
-          window.Px.uniqueIds[baseStr] = window.Px.uniqueIds[baseStr] || [];
-
-          if(window.Px.uniqueIds[baseStr].indexOf(id) !== -1) {
-            //id exists, recreate it.
-            return this.generateRandomID(baseStr);
-          } else {
-            window.Px.uniqueIds[baseStr].push(id);
-          }
-
-          this._uniqueIdsUsed.push(id);
-          return id;
       }
 
     });

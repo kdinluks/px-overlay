@@ -42,12 +42,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       this._overlayHost = this.shadowRoot ? this.shadowRoot.querySelector('#overlayHost') : this.querySelector('#overlayHost');
 
       this._attachmentRequestBound = this._attachmentRequest.bind(this);
-      this._retargetEventBound = this._retargetEvent.bind(this);
+      this._refireEventBound = this._refireEvent.bind(this);
 
     },
 
     attached: function() {
-      // we want to get our parent component so we can attach a listener to it and pick up events from sibling elems instead of having to wrap everything in overlay-container.
+      // we want to get the parent element of this container so we can attach a listener to it and pick up events from sibling elems instead of having to wrap everything in overlay-container.
       this._host = this._getHostRoot();
       this._host.addEventListener('px-overlay-attachment-request', this._attachmentRequestBound);
 
@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         val.overlay.forEach(eventName => {
-          val.container.removeEventListener(eventName, this._retargetEventBound);
+          val.container.removeEventListener(eventName, this._refireEventBound);
         });
 
         // Dont like this; maybe fire event instead?
@@ -76,25 +76,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       const ne = Polymer.dom(evt);
       const target = ne.rootTarget;
 
-      if(this.containerType && target.containerType !== this.containerType) {
+      if(target.containerType !== this.containerType) {
         return;
       }
 
-      // store references to our overlay target
-      this._attachedOverlays[target._id] = {};
-      this._attachedOverlays[target._id]['overlay'] = target;
-      this._attachedOverlays[target._id]['content'] = [];
-
-      // create a container for our content
+      // Create a container for our content
+      // This makes it easier to attach event listeners and know where to refire them
       const elem = document.createElement('div');
       elem.setAttribute("id", target._id);
       this._overlayHost.appendChild(elem);
 
+      // Store references to our overlay target, content, and local container
+      // This way we can handle detachment more easily
+      this._attachedOverlays[target._id] = {};
+      this._attachedOverlays[target._id]['overlay'] = target;
       this._attachedOverlays[target._id]['container'] = elem;
+      this._attachedOverlays[target._id]['content'] = [];
 
-      // set up listeners to retarget events
+      // set up listeners to refire events
       target.eventNames.forEach(name => {
-        elem.addEventListener(name, this._retargetEventBound);
+        elem.addEventListener(name, this._refireEventBound);
       });
 
       // store and attach content
@@ -121,7 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       this._attachedOverlays[target._id]['overlay'].eventNames.forEach(eventName => {
-        this._attachedOverlays[target._id]['container'].removeEventListener(eventName, this._retargetEventBound);
+        this._attachedOverlays[target._id]['container'].removeEventListener(eventName, this._refireEventBound);
       });
 
       this._overlayHost.removeChild(this._attachedOverlays[target._id]['container']);
@@ -129,6 +130,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       delete this._attachedOverlays[target._id];
     },
 
+    /**
+    * Returns the root element hosting the container.
+    * @returns {Node}
+    */
     _getHostRoot: function() {
       let n = this;
       while (n) {
@@ -140,7 +145,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return document;
     },
 
-    _retargetEvent: function(evt) {
+    _refireEvent: function(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+
       const id = evt.currentTarget.getAttribute("id");
       const newEvent = new CustomEvent(evt.type, evt);
 
@@ -149,8 +157,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       this._attachedOverlays[id]['overlay'].dispatchEvent(newEvent);
 
-      evt.preventDefault();
-      evt.stopPropagation();
     }
 
   });
