@@ -17,161 +17,63 @@
 
     <link rel="import" href="../../promise-polyfill/promise-polyfill-lite.html"/>
     <link rel="import" href="../../polymer/polymer.html"/>
-    <link rel="import" href="../px-overlay.html"/>
+    <link rel="import" href="../../px-modal/px-modal.html"/>
+    <link rel="import" href="../../px-icon-set/px-icon-set.html"/>
+    <link rel="import" href="../../px-icon-set/px-icon.html"/>
+    <link rel="import" href="../px-overlay-content.html"/>
     <link rel="import" href="../px-overlay-container.html"/>
   </head>
 
   <body>
-    <style>
-      .outsideStyle {
-        color: firebrick;
-        font-family: Georgia, 'Times New Roman', Times, serif
-      }
-    </style>
-    <!-- <px-overlay-container></px-overlay-container> -->
-
-    <!-- <div style="overflow:hidden; position:relative; width: 800px; height: 250px; background-color: #aaa; z-index: 5;"> -->
-        <div><button style="width: 100px; height: 70px;" onclick="clicky()">Clicky</button></div>
-    <!-- </div> -->
-    <div style="overflow:hidden; position:absolute; top: 240px; left: 50px; width: 800px; height: 150px; border: 1px solid grey; z-index: 1;">
-
-      <test-overlay-in-comp class="tests"></test-overlay-in-comp>
-
-      <px-overlay class="tests">
-        <test-overlay-outside ></test-overlay-outside>
-      </px-overlay>
-
-      <test-overlay-in-comp-with-slot class="tests">
-          <style>
-            .myslot {
-              color: salmon;
-              font-family: Georgia, 'Times New Roman', Times, serif
-            }
-          </style>
-        <div class="myslot" style="font-size: 24px; position: fixed; ">test-overlay-in-comp-with-slot</div>
-      </test-overlay-in-comp-with-slot>
-
-      <px-overlay class="tests">
-        <style>
-          .myslot2 {
-            color: salmon;
-            font-family: Georgia, 'Times New Roman', Times, serif
-          }
-        </style>
-        <test-overlay-outside-comp-with-slot>
-          <div class="myslot2" style="font-size: 24px;">test-overlay-outside-comp-with-slot</div>
-        </test-overlay-outside-comp-with-slot>
-      </px-overlay>
-
-      <px-overlay class="tests">
-        <test-overlay-outside-comp-with-slot>
-          <div class="outsideStyle" style="font-size: 24px;">outside style</div>
-        </test-overlay-outside-comp-with-slot>
-      </px-overlay>
+    <dom-bind>
+      <template>
+        <h3>Example px-modal in a custom component to maintain light dom and styling of light dom</h3>
+        <px-modal-trigger trigger="{{openTrigger}}">
+          <button>Open Modal</button>
+        </px-modal-trigger>
+        <px-overlay-content>
+          <example-wrapped-modal open-trigger="[[openTrigger]]"></example-wrapped-modal>
+        </px-overlay-content>
+      </template>
+    </dom-bind>
 
 
-    </div>
-
-    <span style="font-size: 24px;">I live outside</span>
-    <span class="myslot" style="font-size: 24px;">Do I get myslot styles?</span>
-    <span class="myslot2" style="font-size: 24px;">Do I get myslot2 styles?</span>
-    <span class="outsideStyle" style="font-size: 24px;">Firebrick!</span>
-
-
-<dom-module id="test-overlay-in-comp">
-  <template>
-  <style>
-    div {
-      color: salmon;
-      font-family: Georgia, 'Times New Roman', Times, serif
-    }
-  </style>
-  <px-overlay opened="[[opened]]">
-    <div style="font-size: 24px;">test-overlay-in-comp</div>
-  </px-overlay>
-</template>
-</dom-module>
-<script>
-document.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'test-overlay-in-comp',
-    properties:{
-      opened: {
-        type: Boolean,
-        value:false
-      }
-    }
-  });
-});
-</script>
-
-<dom-module id="test-overlay-outside">
-  <template>
-  <style>
-    div {
-      color: salmon;
-      font-family: Georgia, 'Times New Roman', Times, serif
-    }
-  </style>
-  <div style="font-size: 24px;">test-overlay-outside</div>
-</template>
-</dom-module>
-<script>
-document.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'test-overlay-outside'
-  });
-});
-</script>
-
-
-<dom-module id="test-overlay-in-comp-with-slot">
-  <template>
-  <px-overlay opened="[[opened]]">
-    <slot></slot>
-  </px-overlay>
-</template>
-</dom-module>
-<script>
-document.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'test-overlay-in-comp-with-slot',
-    properties:{
-      opened: {
-        type: Boolean,
-        value:false
-      }
-    }
-  });
-});
-</script>
-
-<dom-module id="test-overlay-outside-comp-with-slot">
-    <template>
-      <slot></slot>
-  </template>
-</dom-module>
-<script>
-document.addEventListener('WebComponentsReady', function() {
-  Polymer({
-    is: 'test-overlay-outside-comp-with-slot',
-    properties:{
-      opened: {
-        type: Boolean,
-        value:false
-      }
-    }
-  });
-});
-</script>
-
-    <script>
-      function clicky() {
-        var tests = document.querySelectorAll('.tests');
-        for(var i=0; i< tests.length; i++) {
-          tests[i].set('opened', !tests[i].opened);
+    <dom-module id="example-wrapped-modal">
+      <template>
+      <style>
+        * {
+          margin: 20px;
         }
-      }
+
+        h1 {
+          color: salmon;
+          font-family: Georgia, 'Times New Roman', Times, serif
+        }
+        px-icon {
+          --iron-icon-width: 250px;
+          --iron-icon-height: 250px;
+          stroke-width: 0.5;
+          stroke: firebrick;
+        }
+      </style>
+
+      <px-modal
+        open-trigger="{{openTrigger}}"
+        reject-text="Abort"
+        accept-text="Starman">
+        <h1 slot="header">My Custom Title</h1>
+        <div slot="body">
+          <p>My custom body</p>
+          <px-icon icon="px-fea:deployments"></px-icon>
+        </div>
+      </px-modal>
+    </template>
+    </dom-module>
+    <script>
+    document.addEventListener('WebComponentsReady', function() {
+      Polymer({ is: 'example-wrapped-modal' });
+    });
     </script>
+
   </body>
 </html>

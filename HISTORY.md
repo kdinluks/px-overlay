@@ -1,3 +1,8 @@
+v2.0.0
+==================
+* BREAKING CHANGE: Removed px-overlay component.
+* Adding px-overlay-behavior, px-overlay-content, and px-overlay-container components which help devs hoist their overlay content up the dom to avoid stacking context issues.
+
 v1.1.1
 ==================
 * fix webcomponents import
