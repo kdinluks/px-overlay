@@ -17,8 +17,17 @@
       ],
 
       properties: {
+        /**
+        * Holder for the slotted content which will be hoisted
+        */
         _content: Array,
+        /**
+        * The container to which content is hoisted
+        */
         _container: HTMLElement,
+        /**
+        * A list of string event names that should get refired to this component from the container
+        */
         eventNames: {
           type: Array,
           value: function() { return []; }
@@ -28,9 +37,13 @@
           type: Boolean,
           value: false
         },
+        /**
+        * Whether this component should hoist it's content to a container or leave it local.
+        */
         hoist: {
           type: Boolean,
           value: true
+          //yes, I made true by default. Seems unlikely anyone would want to use this component and set it to false unless you are binding it to a property, in which case, this is ok.
         }
       },
 
@@ -39,12 +52,13 @@
       ],
 
       attached: function() {
-        // FIXME? is a requestIdleFeedback a good idea? Will modals ever start open?
-
-        // FIXME Polymer 1 fallback
         Polymer.RenderStatus.afterNextRender(this, () => {
           // TODO, what if we have dynamic content, like dom repeat? Need to test
-          this._content = Polymer.FlattenedNodesObserver.getFlattenedNodes(this);
+
+          this._content =  Polymer.FlattenedNodesObserver ?
+            Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
+            Polymer.dom(this).getEffectiveChildNodes();
+
           this._isAttached = true;
           this._hoistPropChanged(this.hoist);
         });
@@ -79,7 +93,6 @@
 
           document.body.appendChild(elem);
 
-          // FIXME Polymer 1 fallback
           Polymer.RenderStatus.afterNextRender(elem, () => {
             this.dispatchEvent(event);
           });

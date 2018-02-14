@@ -26,12 +26,12 @@
 
   <body>
     <dom-bind>
-      <template>
+      <template is="dom-bind">
         <h3>Example px-modal in a custom component to maintain light dom and styling of light dom</h3>
         <px-modal-trigger trigger="{{openTrigger}}">
           <button>Open Modal</button>
         </px-modal-trigger>
-        <px-overlay-content>
+        <px-overlay-content event-names='["px-modal-rejected", "px-modal-accepted", "px-modal-dismissed"]'>
           <example-wrapped-modal open-trigger="[[openTrigger]]"></example-wrapped-modal>
         </px-overlay-content>
       </template>
@@ -72,6 +72,10 @@
     <script>
     document.addEventListener('WebComponentsReady', function() {
       Polymer({ is: 'example-wrapped-modal' });
+    });
+
+    window.addEventListener("px-modal-accepted", (evt) => {
+      debugger
     });
     </script>
 

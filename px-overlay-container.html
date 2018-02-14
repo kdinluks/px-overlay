@@ -61,6 +61,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     },
 
     detached: function() {
+      this._parent.removeEventListener('px-overlay-attachment-request', this._attachmentRequestBound);
+      this._parent = null;
+
       this._attachedOverlays.forEach((val, key, map) => {
         val.content.forEach(child => {
           val.localContainer.removeChild(child);
@@ -75,9 +78,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       });
 
       this._attachedOverlays.clear();
-      this._parent.removeEventListener('px-overlay-attachment-request', this._attachmentRequestBound);
-      this._parent = null;
-
     },
 
     _attachmentRequest: function(evt) {
@@ -136,7 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         info.localContainer.removeChild(child);
       });
 
-      info.overlay.eventNames.forEach(eventName => {
+      target.eventNames.forEach(eventName => {
         info.localContainer.removeEventListener(eventName, info.fn);
       });
 
