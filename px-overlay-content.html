@@ -18,17 +18,8 @@
 
       properties: {
         _content: Array,
-        _id: String,
         _container: HTMLElement,
         eventNames: {
-          type: Array,
-          value: function() { return []; }
-        },
-        /**
-        * Array of unique IDs generated for this comp. cleaned from global
-        * store on detached
-        */
-        _uniqueIdsUsed: {
           type: Array,
           value: function() { return []; }
         },
@@ -50,9 +41,8 @@
       attached: function() {
         // FIXME? is a requestIdleFeedback a good idea? Will modals ever start open?
 
-        // dunno if we really need this, but seems like a good idea ¯\(º o)/¯
+        // FIXME Polymer 1 fallback
         Polymer.RenderStatus.afterNextRender(this, () => {
-          this._id = this.generateRandomID('overlay_');
           // TODO, what if we have dynamic content, like dom repeat? Need to test
           this._content = Polymer.FlattenedNodesObserver.getFlattenedNodes(this);
           this._isAttached = true;
@@ -66,10 +56,6 @@
 
         if(this._container) {
           this._container.detachContent(this);
-        }
-
-        if(this._id) {
-          window.Px.uniqueIds['overlay_'].splice(window.Px.uniqueIds['overlay_'].indexOf(this._id), 1);
         }
 
       },
@@ -86,46 +72,18 @@
         // If no container responded, create one
         if (!event.defaultPrevented) {
           const elem = document.createElement('px-overlay-container');
-          elem.setAttribute('container-type', this.containerType);
+
+          if(this.containerType) {
+            elem.setAttribute('container-type', this.containerType);
+          }
 
           document.body.appendChild(elem);
 
-          // dunno if we really need this, but seems like a good idea ¯\(º o)/¯
+          // FIXME Polymer 1 fallback
           Polymer.RenderStatus.afterNextRender(elem, () => {
             this.dispatchEvent(event);
           });
         }
-      },
-
-      /**
-      * Generates a random id string.
-      *
-      * Takes a string prefix, then adds 10 random chars
-      *
-      * @param {string}
-      * @return {id string}
-      */
-      generateRandomID: function(baseStr) {
-        var id = baseStr || 'id_',
-            abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-            len = abc.length;
-
-        for(var i = 0; i < 10; i++){
-          id += abc.charAt(Math.floor(Math.random() * len));
-        }
-
-        window.Px = window.Px || {};
-        window.Px.uniqueIds = window.Px.uniqueIds || {};
-        window.Px.uniqueIds[baseStr] = window.Px.uniqueIds[baseStr] || [];
-
-        if(window.Px.uniqueIds[baseStr].indexOf(id) !== -1) {
-          //id exists, recreate it.
-          return this.generateRandomID(baseStr);
-        } else {
-          window.Px.uniqueIds[baseStr].push(id);
-        }
-
-        return id;
       },
 
       _hoistPropChanged: function(hoist) {
@@ -140,7 +98,7 @@
           this._container.detachContent(this);
           this._container = undefined;
           this._content.forEach(elem => {
-            this.appendChild(elem);
+            Polymer.dom(this).appendChild(elem);
           });
         }
 

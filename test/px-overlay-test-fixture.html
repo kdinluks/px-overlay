@@ -12,34 +12,22 @@
          when wct is run from the command line -->
     <script src="../../web-component-tester/browser.js"></script>
     <link rel="import" href="../../px-theme/px-theme-styles.html">
-    <link rel="import" href="../px-overlay.html" />
+    <link rel="import" href="../px-overlay-content.html" />
+    <link rel="import" href="../px-overlay-container.html" />
     <!-- Retain this link for px-theme-styles.html -->
     <script src="px-overlay-custom-tests.js"></script>
     <custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
     </custom-style>
-    <custom-style>
-      <style is="custom-style">
-        /*html {*/
-          .salmon {
-            --px-overlay-color: salmon;
-          }
-        /*}*/
-      </style>
-    </custom-style>
   </head>
 
   <body>
     <h3>Web Component Test : Fixture for px-overlay</h3>
-    <test-fixture id="px-overlay-fixture">
-      <template>
-        <px-overlay></px-overlay>
-      </template>
-    </test-fixture>
-    <test-fixture id="px-overlay-salmon-fixture">
-      <template>
-        <px-overlay class="salmon"></px-overlay>
-      </template>
-    </test-fixture>
+    <px-overlay-container id="px-overlay-container-fixture"></px-overlay-container>
+    <div id="eventCatcher">
+      <px-overlay-content id="px-overlay-content-fixture" event-names='["test-event"]'>
+        <h1>HI DAVID</h1>
+      </px-overlay-content>
+    </div>
   </body>
 </html>
