@@ -14,14 +14,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="px-overlay-behavior.html"/>
 
+<!--
+A container to which content from px-overlay-content is hoisted. This is done to escape out of stacking contexts so overlays / modals / floating content can be shown over other content.
+
+### Usage
+
+#### Generic
+```
+    <px-overlay-container></px-overlay-container>
+```
+
+#### For content with matching type
+```
+    <px-overlay-container container-type="foo"></px-overlay-container>
+```
+
+### Styling
+
+The following custom properties are available for styling of the overlay container.
+
+Custom property | Description
+:----------------|:-------------
+`--px-overlay-container-z-index` | The z-index of the container
+
+@element px-overlay-container
+@blurb A container to which content from px-overlay-content is hoisted.
+@homepage index.html
+@demo index.html
+-->
 <dom-module id="px-overlay-container">
-  <style>
-    #overlayHost {
-      position: fixed;
-      z-index: var(--px-overlay-container-z-index, 250);
-    }
-  </style>
   <template>
+    <style>
+      #overlayHost {
+        position: fixed;
+        z-index: var(--px-overlay-container-z-index, 1250);
+      }
+    </style>
     <div id="overlayHost">
     </div>
   </template>

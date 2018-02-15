@@ -4,8 +4,6 @@ const gulp = require('gulp');
 const pkg = require('./package.json');
 const $ = require('gulp-load-plugins')();
 const gulpSequence = require('gulp-sequence');
-const importOnce = require('node-sass-import-once');
-const stylemod = require('gulp-style-modules');
 const browserSync = require('browser-sync').create();
 const gulpif = require('gulp-if');
 const combiner = require('stream-combiner2');
@@ -13,16 +11,8 @@ const bump = require('gulp-bump');
 const argv = require('yargs').argv;
 const exec = require('child_process').exec;
 
-const sassOptions = {
-  importer: importOnce,
-  importOnce: {
-    index: true,
-    bower: true
-  }
-};
-
 gulp.task('clean', function() {
-  return gulp.src(['.tmp', 'css'], {
+  return gulp.src(['.tmp'], {
     read: false
   }).pipe($.clean());
 });
@@ -32,32 +22,8 @@ function handleError(err){
   this.emit('end');
 }
 
-function buildCSS(){
-  return combiner.obj([
-    $.sass(sassOptions),
-    $.autoprefixer({
-      browsers: ['last 2 versions'],
-      cascade: false,
-      flexbox: false
-    }),
-    gulpif(!argv.debug, $.cssmin())
-  ]).on('error', handleError);
-}
-
-gulp.task('sass', function() {
-  return gulp.src(['./sass/*.scss'])
-    .pipe(buildCSS())
-    .pipe(stylemod({
-      moduleId: function(file) {
-        return path.basename(file.path, path.extname(file.path)) + '-styles';
-      }
-    }))
-    .pipe(gulp.dest('css'))
-    .pipe(browserSync.stream({match: 'css/*.html'}));
-});
-
 gulp.task('generate-api', function (cb) {
-  exec(`node_modules/.bin/polymer analyze ${pkg.name}.html > ${pkg.name}-api.json`, function (err, stdout, stderr) {
+  exec(`node_modules/.bin/polymer analyze ${pkg.name}-*.html > ${pkg.name}-api.json`, function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
@@ -65,7 +31,7 @@ gulp.task('generate-api', function (cb) {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['sass/*.scss'], ['sass']);
+  gulp.watch([]);
 });
 
 gulp.task('serve', function() {
@@ -78,8 +44,8 @@ gulp.task('serve', function() {
     server: ['./', 'bower_components'],
   });
 
-  gulp.watch(['css/*-styles.html', '*.html', '*.js', 'demo/*.html']).on('change', browserSync.reload);
-  gulp.watch(['sass/*.scss'], ['sass']);
+  gulp.watch(['*.html', '*.js', 'demo/*.html']).on('change', browserSync.reload);
+  gulp.watch([]);
 
 });
 
@@ -102,5 +68,5 @@ gulp.task('bump:major', function(){
 });
 
 gulp.task('default', function(callback) {
-  gulpSequence('clean', 'sass', 'generate-api')(callback);
+  gulpSequence('clean', 'generate-api')(callback);
 });

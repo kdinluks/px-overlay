@@ -11,17 +11,17 @@
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
 <!-- Imports for this component -->
- 
-<link rel="import" href="../px-overlay.html" />
+<link rel="import" href="../../px-dropdown/px-dropdown.html"/>
+<link rel="import" href="../../px-modal/px-modal.html"/>
+<link rel="import" href="../../px-modal/px-modal-trigger.html"/>
 
 <!-- Demo DOM module -->
 <dom-module id="px-overlay-demo">
   <template>
- 
 
     <!-- Header -->
     <px-demo-header
-        module-name="px-overlay"
+        module-name="px-overlay-content & px-overlay-container"
         description="The px-overlay components are used for modal dialogues, popovers, and other use cases where content floats above other content. It prevents stacking context issues by hoisting the floating dialog up the dom to a container."
         mobile tablet desktop>
     </px-demo-header>
@@ -37,13 +37,24 @@
       <!-- Component ---------------------------------------------------------->
       <px-demo-component slot="px-demo-component">
         <div>
-          <p>Note: this button and its impact on the visibility of px-overlay are artifacts of this demo and are not included in the px-overlay component itself.
-            See <a href="https://www.predix-ui.com/#/components/px-modal/">px-modal</a> for a more full-featured component that includes the invoking element and dialog box.</p>
-          <button id="btn" class="btn btn--tertiary">Click me to get an overlay</button>
-          <px-overlay
-              id="pxOverlay"
-              class="visuallyhidden">
-          </px-overlay>
+          <p>This demo illustrates a stacking context problem. We have a px-dropdown (which uses px-overlay-content internally) slotted inside a px-modal. You can toggle the hoist property in the properties panel to test the different between hoisting the dropdown and not.</p>
+
+          <p>See <a href="https://www.predix-ui.com/#/develop/stacking-context/">this stacking context guide</a> for thorough description on how to use the px-overlay-content and px-overlay-container components.</p>
+
+          <px-modal id="modal" header-text="This is a modal" accept-text="Accept" reject-text="Reject" open-trigger="[[openTrigger]]">
+            <div slot="body">
+              <p>Click on the dropdown to see it float over the modal if hoist is on or be cut off by the modal if hoist is off.</p>
+              <px-dropdown
+                id="dropdown"
+                hoist="{{props.hoist.value}}"
+                container-type="{{props.containerType.value}}"
+                items='[{"key":"1","val":"iPhone"},{"key":"2","val":"Android"},{"key":"3","val":"Blackberry"},{"key":"4","val":"I am a menu item so I cannot be selected","disableSelect":true},{"key":"5","val":"Flip Phone","disabled":true}]'>
+              </px-dropdown>
+            </div>
+          </px-modal>
+          <px-modal-trigger id="modalTrigger" trigger="{{openTrigger}}">
+            <button>Open Modal</button>
+          </px-modal-trigger>
         </div>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
@@ -51,7 +62,7 @@
       <px-demo-component-snippet
           slot="px-demo-component-snippet"
           element-properties="{{props}}"
-          element-name="px-overlay">
+          element-name="px-overlay-content">
       </px-demo-component-snippet>
     </px-demo-interactive>
 
@@ -78,25 +89,34 @@
       configs: {
         type: Array,
         value: function(){
-          return [
-            { configName: "Default",
-              configReset: true }
-          ]
+          return [{
+            configName: "Default",
+            configReset: true
+          }]
         }
       }
     },
 
-    ready: function() {
-      var overlay = this.$$('#pxOverlay');
-      this.$$('#btn').addEventListener('tap', function() {
-        overlay.classList.toggle('visuallyhidden');
-      });
-      overlay.addEventListener('tap', function() {
-        overlay.classList.toggle('visuallyhidden');
-      })
-    },
-
-    demoProps: {}
+    demoProps: {
+      hoist: {
+        type: Boolean,
+        defaultValue: true,
+        inputType: 'toggle'
+      },
+      containerType: {
+        type: String,
+        defaultValue: "foo",
+        inputType: 'text'
+      },
+      eventNames: {
+        type: Array,
+        defaultValue: [
+          "px-dropdown-click",
+          "px-dropdown-selection-changed"
+        ],
+        inputType: 'code:JSON'
+      },
+    }
 
   });
 </script>
