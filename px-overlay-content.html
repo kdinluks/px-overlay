@@ -25,7 +25,7 @@ If no px-overlay-content is found between px-overlay-content and the document bo
 -->
 <dom-module id="px-overlay-content">
   <template strip-whitespace>
-    <slot></slot>
+    <slot id="myslot"></slot>
   </template>
 </dom-module>
 
@@ -46,6 +46,10 @@ If no px-overlay-content is found between px-overlay-content and the document bo
       * The container to which content is hoisted
       */
       _container: HTMLElement,
+      /**
+      * The slot element
+      */
+      _slot: HTMLElement,
       /**
       * A list of string event names that should get refired to this component from the container
       */
@@ -72,15 +76,28 @@ If no px-overlay-content is found between px-overlay-content and the document bo
       '_hoistPropChanged(hoist)'
     ],
 
+    created: function () {
+      this._onSlotChangedBound = this._onSlotChange.bind(this);
+
+    },
+
+    ready: function() {
+      // this._slot = this.shadowRoot ? this.shadowRoot.querySelector('slot') : this.querySelector('slot');
+      // wrote the polymer 2 code above, but apparently polymer 1 does some kind of transform turning the <slot> into a <content> tag. So we can just fallback on the P1 way and use an id
+      this._slot = this.$.myslot;
+    },
+
     attached: function() {
       Polymer.RenderStatus.afterNextRender(this, () => {
-        // TODO, what if we have dynamic content, like dom repeat? Need to test
+
+        this._slot.addEventListener('slotchange', this._onSlotChangedBound);
 
         this._content =  Polymer.FlattenedNodesObserver ?
           Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
           Polymer.dom(this).getEffectiveChildNodes();
 
         this._isAttached = true;
+
         this._hoistPropChanged(this.hoist);
       });
 
@@ -137,6 +154,22 @@ If no px-overlay-content is found between px-overlay-content and the document bo
         });
       }
 
+    },
+
+    _onSlotChange: function () {
+      if(!this.hoist || !this._container) {
+        return;
+      }
+
+      const newContent =  Polymer.FlattenedNodesObserver ?
+          Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
+          Polymer.dom(this).getEffectiveChildNodes();
+
+      if(newContent.length) {
+        this._content.push(...newContent);
+        this._container.appendNewContent(this, newContent);
+        // Array.prototype.push.apply(this._content,newContent);
+      }
     }
 
   });

@@ -26,8 +26,14 @@
     <px-overlay-container id="px-overlay-container-fixture"></px-overlay-container>
     <div id="eventCatcher">
       <px-overlay-content id="px-overlay-content-fixture" event-names='["test-event"]'>
-        <h1>HI DAVID</h1>
+        <span id="wrapper">
+          <h1>HI DAVID</h1>
+        </span>
       </px-overlay-content>
     </div>
+    <script>
+      // little sloppy, but our content gets hoisted before our tests run, so we have a hard time finding our #wrapper. Save it here before it gets hoisted.
+      window._wrapper = document.getElementById('wrapper');
+    </script>
   </body>
 </html>

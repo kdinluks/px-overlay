@@ -152,6 +152,20 @@ Custom property | Description
       evt.stopPropagation();
     },
 
+    appendNewContent: function(target, content) {
+      if(!this._attachedOverlays.has(target)) {
+        console.warn('Overlay container and container have become desynced. Cant add new content.');
+        return;
+      }
+
+      const data = this._attachedOverlays.get(target);
+
+      content.forEach(child => {
+        data.content.push(child);
+        data.localContainer.appendChild(child);
+      });
+    },
+
     detachContent: function(target) {
       if(!this._attachedOverlays.has(target)) {
         console.warn('something has gone terribly wrong... overlay and container have become desynced.');

@@ -24,7 +24,7 @@ suite('Basic configuration', function() {
   test('Content is hoisted to container', function() {
     const elems = overlayHost.querySelectorAll('div');
     assert.equal(elems.length, 1);
-    assert.equal(elems[0].children[0].textContent, "HI DAVID");
+    assert.equal(elems[0].children[0].children[0].textContent, "HI DAVID");
   });
 
   test('Container creates a map with info', function() {
@@ -86,7 +86,7 @@ suite('Detach container', function() {
     const elems = overlayHost.querySelectorAll('div');
 
     assert.equal(elems.length, 1);
-    assert.equal(elems[0].children[0].textContent, "HI DAVID");
+    assert.equal(elems[0].children[0].children[0].textContent, "HI DAVID");
   });
 
 });
@@ -151,6 +151,41 @@ suite('Add containerType and hoist to true', function() {
     assert.equal(elems.length, 0);
     assert.equal(elemsFoo.length, 1);
     assert.equal(elemsFoo[0].querySelector('h1').textContent, "HI DAVID");
+
+  });
+
+});
+
+suite('Add new content to the overlay-content', function() {
+  let newElem;
+
+  suiteSetup((done) => {
+    newElem = document.createElement('h2');
+    newElem.setAttribute("david", true);
+    newElem.textContent = "is Ben there?";
+
+    window._wrapper.appendChild(newElem);
+
+    flush(() => {
+      setTimeout( () => {
+        done();
+      }, 50);
+    });
+  });
+
+  test("new content was added to the content's _content", function() {
+    assert.equal(overlayContent._content.length, 3);
+    assert.equal(overlayContent._content[1].children[1], newElem);
+
+  });
+
+  test('Content was added to the container', function() {
+    const elems = overlayHost.querySelectorAll('div');
+    const elemsFoo = overlayHostFoo.querySelectorAll('div');
+
+    assert.equal(elems.length, 0);
+    assert.equal(elemsFoo.length, 1);
+    assert.equal(elemsFoo[0].querySelector('h2').textContent, "is Ben there?");
 
   });
 
