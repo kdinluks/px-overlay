@@ -1,3 +1,7 @@
+v2.0.1
+==================
+* fixing dropdown version
+
 v2.0.0
 ==================
 * BREAKING CHANGE: Removed px-overlay component.
