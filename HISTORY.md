@@ -1,3 +1,9 @@
+v2.0.2
+==================
+* Updating dropdown version
+* Filtering out text nodes
+* Added methods to remove dynamic elements
+
 v2.0.1
 ==================
 * fixing dropdown version

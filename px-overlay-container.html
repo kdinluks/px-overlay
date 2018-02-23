@@ -214,6 +214,20 @@ Custom property | Description
 
       target.dispatchEvent(newEvent);
 
+    },
+
+    removeElem: function(overlay, elem) {
+      const content = this._attachedOverlays.get(overlay);
+
+      const i = content.content.indexOf(elem);
+
+      if(i === -1) {
+        console.warn('Container could not locate content to remove...');
+        return;
+      }
+
+      content.content.splice(i,1);
+      content.localContainer.removeChild(elem);
     }
 
   });

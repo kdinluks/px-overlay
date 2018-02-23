@@ -92,9 +92,7 @@ If no px-overlay-content is found between px-overlay-content and the document bo
 
         this._slot.addEventListener('slotchange', this._onSlotChangedBound);
 
-        this._content =  Polymer.FlattenedNodesObserver ?
-          Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
-          Polymer.dom(this).getEffectiveChildNodes();
+        this._content = this._getSlotContent();
 
         this._isAttached = true;
 
@@ -161,15 +159,55 @@ If no px-overlay-content is found between px-overlay-content and the document bo
         return;
       }
 
-      const newContent =  Polymer.FlattenedNodesObserver ?
-          Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
-          Polymer.dom(this).getEffectiveChildNodes();
+      const newContent = this._getSlotContent();
 
       if(newContent.length) {
         this._content.push(...newContent);
-        this._container.appendNewContent(this, newContent);
         // Array.prototype.push.apply(this._content,newContent);
+        this._container.appendNewContent(this, newContent);
       }
+    },
+
+    _getSlotContent: function() {
+      const content = Polymer.FlattenedNodesObserver ?
+          Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
+          Polymer.dom(this).getEffectiveChildNodes();
+
+      return content.filter(n => n.nodeType === Node.ELEMENT_NODE);
+    },
+
+    /*
+    * Removes a slotted child
+    */
+    removeChild: function(elem) {
+    // This is fine...
+    // Overwrite the native method so as to not confuse people.
+    // There is nothing that can possibly go wrong with this
+
+      if(!elem) {
+        return;
+      }
+
+      // if not hoisted, rely on normal removeChild to remove it locally
+      if(!this.hoist) {
+        const f = Element.prototype.removeChild;
+        f.apply(this, arguments);
+        return;
+      }
+
+      const i = this._content.indexOf(elem);
+
+      // if hoisted and something went wrong :-/
+      if(i === -1) {
+        console.warn('This child should have been hoisted but was not... Trying to remove locally.');
+        const f = Element.prototype.removeChild;
+        f.apply(this, arguments);
+        return;
+      }
+
+      this._content.splice(i, 1);
+      this._container.removeElem(this, elem);
+
     }
 
   });

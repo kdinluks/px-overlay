@@ -1,6 +1,6 @@
 {
   "name": "px-overlay",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": [
     "px-overlay.html"
   ],
@@ -27,7 +27,7 @@
   "devDependencies": {
     "web-component-tester": "^6.3.0",
     "px-demo": "^3.0.0",
-    "px-dropdown": "^4.5.0",
+    "px-dropdown": "^4.6.0",
     "px-modal": "^3.3.0"
   },
   "resolutions": {
