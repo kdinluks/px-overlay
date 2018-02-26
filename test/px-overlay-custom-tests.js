@@ -33,7 +33,7 @@ suite('Basic configuration', function() {
     const vals = overlayContainer._attachedOverlays.get(overlayContent);
 
     assert.equal(vals.localContainer, overlayHost.querySelector('div'));
-    assert.equal(vals.content.length, 3);
+    assert.equal(vals.content.length, 1);
     assert.equal(typeof vals.fn, 'function');
   });
 
@@ -174,8 +174,8 @@ suite('Add new content to the overlay-content', function() {
   });
 
   test("new content was added to the content's _content", function() {
-    assert.equal(overlayContent._content.length, 3);
-    assert.equal(overlayContent._content[1].children[1], newElem);
+    assert.equal(overlayContent._content.length, 1);
+    assert.equal(overlayContent._content[0].children[1], newElem);
 
   });
 
