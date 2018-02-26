@@ -1,3 +1,7 @@
+v2.0.4
+==================
+* Adding 0 width and height to content
+
 v2.0.3
 ==================
 * fix GH link, hide API section

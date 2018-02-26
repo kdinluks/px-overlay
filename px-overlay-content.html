@@ -25,14 +25,12 @@ If no px-overlay-container is found between px-overlay-content and the document 
 -->
 <dom-module id="px-overlay-content">
   <template>
-  <style>
-    :host {
-      /* background-color: salmon;
-      width: 0;
-      height: 0; */
-    }
-  </style>
-
+    <style>
+      :host {
+        width: 0;
+        height: 0;
+      }
+    </style>
     <slot id="myslot"></slot>
   </template>
 </dom-module>
