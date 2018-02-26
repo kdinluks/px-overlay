@@ -1,3 +1,7 @@
+v2.0.5
+==================
+* Removing container import from behavior
+
 v2.0.4
 ==================
 * Adding 0 width and height to content
