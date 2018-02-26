@@ -1,3 +1,7 @@
+v2.0.3
+==================
+* fix GH link, hide API section
+
 v2.0.2
 ==================
 * Updating dropdown version

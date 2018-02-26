@@ -22,6 +22,7 @@
     <!-- Header -->
     <px-demo-header
         module-name="px-overlay-content & px-overlay-container"
+        parent-name="px-overlay"
         description="The px-overlay components are used for modal dialogues, popovers, and other use cases where content floats above other content. It prevents stacking context issues by hoisting the floating dialog up the dom to a container."
         mobile tablet desktop>
     </px-demo-header>
@@ -37,13 +38,13 @@
       <!-- Component ---------------------------------------------------------->
       <px-demo-component slot="px-demo-component">
         <div>
-          <p>This demo illustrates a stacking context problem. We have a px-dropdown (which uses px-overlay-content internally) slotted inside a px-modal. You can toggle the hoist property in the properties panel to test the different between hoisting the dropdown and not.</p>
+          <p>This demo illustrates a stacking context problem. We have a px-dropdown (which uses px-overlay-content internally) slotted inside a px-modal. You can toggle the `hoist` property in the properties panel to see the difference between hoisting the dropdown and not.</p>
 
-          <p>See <a href="https://www.predix-ui.com/#/develop/stacking-context/">this stacking context guide</a> for thorough description on how to use the px-overlay-content and px-overlay-container components.</p>
+          <p>See <a href="https://www.predix-ui.com/#/develop/stacking-context">this stacking context guide</a> for a thorough description of how to use the `px-overlay-content` and `px-overlay-container` components.</p>
 
           <px-modal id="modal" header-text="This is a modal" accept-text="Accept" reject-text="Reject" open-trigger="[[openTrigger]]">
-            <div slot="body">
-              <p>Click on the dropdown to see it float over the modal if hoist is on or be cut off by the modal if hoist is off.</p>
+            <div slot="body" style="padding:20px;">
+              <p>Click on the dropdown to see it float over the modal (if hoist is on), or be cut off by the modal (if hoist is off).</p>
               <px-dropdown
                 id="dropdown"
                 hoist="{{props.hoist.value}}"
@@ -67,7 +68,7 @@
     </px-demo-interactive>
 
     <!-- API Viewer -->
-    <px-demo-api-viewer source="px-overlay"></px-demo-api-viewer>
+    <!-- <px-demo-api-viewer source="px-overlay"></px-demo-api-viewer> -->
 
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
