@@ -27,6 +27,7 @@ const combiner = require('stream-combiner2');
 const bump = require('gulp-bump');
 const argv = require('yargs').argv;
 const exec = require('child_process').exec;
+const { ensureLicense } = require('ensure-px-license');
 
 gulp.task('clean', function() {
   return gulp.src(['.tmp'], {
@@ -84,6 +85,12 @@ gulp.task('bump:major', function(){
   .pipe(gulp.dest('./'));
 });
 
+gulp.task('license', function() {
+  return gulp.src(['./**/*.{html,js,css,scss}', '!./node_modules/**/*', '!./bower_components?(-1.x)/**/*'])
+    .pipe(ensureLicense())
+    .pipe(gulp.dest('.'));
+});
+
 gulp.task('default', function(callback) {
-  gulpSequence('clean', 'generate-api')(callback);
+  gulpSequence('clean', 'generate-api', 'license')(callback);
 });
