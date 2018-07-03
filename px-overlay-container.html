@@ -108,12 +108,12 @@ Custom property | Description
       this._parent.removeEventListener('px-overlay-attachment-request', this._attachmentRequestBound);
       this._parent = null;
 
-      this._attachedOverlays.forEach((val, key, map) => {
-        val.content.forEach(child => {
+      this._attachedOverlays.forEach(function(val, key, map) {
+        val.content.forEach(function(child) {
           val.localContainer.removeChild(child);
         });
 
-        key.eventNames.forEach(eventName => {
+        key.eventNames.forEach(function(eventName) {
           val.localContainer.removeEventListener(eventName, val.fn);
         });
 
@@ -125,8 +125,8 @@ Custom property | Description
     },
 
     _attachmentRequest: function(evt) {
-      const ne = Polymer.dom(evt);
-      const target = ne.rootTarget;
+      var ne = Polymer.dom(evt);
+      var target = ne.rootTarget;
 
       if(target.containerType !== this.containerType) {
         return;
@@ -135,17 +135,17 @@ Custom property | Description
       // Create a container for our content
       // We need this to attach listeners to so they dont get
       // trampled by other events with the same name
-      const elem = document.createElement('div');
+      var elem = document.createElement('div');
 
       // set up listeners to refire events
-      const refireCB = this._refireEvent.bind(this, target);
-      target.eventNames.forEach(name => {
+      var refireCB = this._refireEvent.bind(this, target);
+      target.eventNames.forEach(function(name) {
         elem.addEventListener(name, refireCB);
       });
 
       // Store references to our overlay target, content, and local container
       // This way we can handle detachment more easily
-      const targetData = {
+      var targetData = {
         content: [],
         localContainer: elem,
         fn: refireCB
@@ -154,10 +154,10 @@ Custom property | Description
       this._attachedOverlays.set(target, targetData);
 
       // store and attach content
-      target._content.forEach(child => {
+      target._content.forEach(function(child) {
         this._attachedOverlays.get(target).content.push(child);
         elem.appendChild(child);
-      });
+      }.bind(this));
 
       // tell the source overlay who we are for future detachment
       target._container = this;
@@ -174,9 +174,9 @@ Custom property | Description
         return;
       }
 
-      const data = this._attachedOverlays.get(target);
+      var data = this._attachedOverlays.get(target);
 
-      content.forEach(child => {
+      content.forEach(function(child) {
         data.content.push(child);
         data.localContainer.appendChild(child);
       });
@@ -188,13 +188,13 @@ Custom property | Description
         return;
       }
 
-      const info = this._attachedOverlays.get(target);
+      var info = this._attachedOverlays.get(target);
 
-      info.content.forEach(child => {
+      info.content.forEach(function(child) {
         info.localContainer.removeChild(child);
       });
 
-      target.eventNames.forEach(eventName => {
+      target.eventNames.forEach(function(eventName) {
         info.localContainer.removeEventListener(eventName, info.fn);
       });
 
@@ -209,7 +209,7 @@ Custom property | Description
     * @returns {Node}
     */
     _getHostRoot: function() {
-      let n = this;
+      var n = this;
       while (n) {
         if (n.nodeType === Node.DOCUMENT_FRAGMENT_NODE && n.host) {
           return n;
@@ -223,7 +223,7 @@ Custom property | Description
       evt.preventDefault();
       evt.stopPropagation();
 
-      const newEvent = new CustomEvent(evt.type, evt);
+      var newEvent = new CustomEvent(evt.type, evt);
 
       // save previous event data in case it is needed
       newEvent.sourceEvent = evt;
@@ -233,9 +233,9 @@ Custom property | Description
     },
 
     removeElem: function(overlay, elem) {
-      const content = this._attachedOverlays.get(overlay);
+      var content = this._attachedOverlays.get(overlay);
 
-      const i = content.content.indexOf(elem);
+      var i = content.content.indexOf(elem);
 
       if(i === -1) {
         console.warn('Container could not locate content to remove...');

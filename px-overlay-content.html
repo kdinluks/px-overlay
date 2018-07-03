@@ -110,7 +110,7 @@ If no px-overlay-container is found between px-overlay-content and the document 
     },
 
     attached: function() {
-      Polymer.RenderStatus.afterNextRender(this, () => {
+      Polymer.RenderStatus.afterNextRender(this, function() {
 
         this._slot.addEventListener('slotchange', this._onSlotChangedBound);
 
@@ -119,7 +119,7 @@ If no px-overlay-container is found between px-overlay-content and the document 
         this._isAttached = true;
 
         this._hoistPropChanged(this.hoist);
-      });
+      }.bind(this));
 
     },
 
@@ -133,7 +133,7 @@ If no px-overlay-container is found between px-overlay-content and the document 
     },
 
     hoistOverlay: function() {
-      const event = new CustomEvent('px-overlay-attachment-request', {
+      var event = new CustomEvent('px-overlay-attachment-request', {
         bubbles: true,
         composed: true,
         cancelable: true
@@ -143,7 +143,7 @@ If no px-overlay-container is found between px-overlay-content and the document 
 
       // If no container responded, create one
       if (!event.defaultPrevented) {
-        const elem = document.createElement('px-overlay-container');
+        var elem = document.createElement('px-overlay-container');
 
         if(this.containerType) {
           elem.setAttribute('container-type', this.containerType);
@@ -151,9 +151,9 @@ If no px-overlay-container is found between px-overlay-content and the document 
 
         document.body.appendChild(elem);
 
-        Polymer.RenderStatus.afterNextRender(elem, () => {
+        Polymer.RenderStatus.afterNextRender(elem, function() {
           this.dispatchEvent(event);
-        });
+        }.bind(this));
       }
     },
 
@@ -169,9 +169,9 @@ If no px-overlay-container is found between px-overlay-content and the document 
       if(!hoist && this._container) {
         this._container.detachContent(this);
         this._container = undefined;
-        this._content.forEach(elem => {
+        this._content.forEach(function(elem) {
           Polymer.dom(this).appendChild(elem);
-        });
+        }.bind(this));
       }
 
     },
@@ -181,21 +181,25 @@ If no px-overlay-container is found between px-overlay-content and the document 
         return;
       }
 
-      const newContent = this._getSlotContent();
+      var newContent = this._getSlotContent();
 
       if(newContent.length) {
-        this._content.push(...newContent);
+        for (var i = 0; i < newContent.length; i++) {
+          this._content.push(newContent[i]);
+        }
         // Array.prototype.push.apply(this._content,newContent);
         this._container.appendNewContent(this, newContent);
       }
     },
 
     _getSlotContent: function() {
-      const content = Polymer.FlattenedNodesObserver ?
+      var content = Polymer.FlattenedNodesObserver ?
           Polymer.FlattenedNodesObserver.getFlattenedNodes(this) :
           Polymer.dom(this).getEffectiveChildNodes();
 
-      return content.filter(n => n.nodeType === Node.ELEMENT_NODE);
+      return content.filter(function(n) {
+        return n.nodeType === Node.ELEMENT_NODE;
+      });
     },
 
     /*
@@ -212,17 +216,17 @@ If no px-overlay-container is found between px-overlay-content and the document 
 
       // if not hoisted, rely on normal removeChild to remove it locally
       if(!this.hoist) {
-        const f = Element.prototype.removeChild;
+        var f = Element.prototype.removeChild;
         f.apply(this, arguments);
         return;
       }
 
-      const i = this._content.indexOf(elem);
+      var i = this._content.indexOf(elem);
 
       // if hoisted and something went wrong :-/
       if(i === -1) {
         console.warn('This child should have been hoisted but was not... Trying to remove locally.');
-        const f = Element.prototype.removeChild;
+        var f = Element.prototype.removeChild;
         f.apply(this, arguments);
         return;
       }
